@@ -4,7 +4,7 @@
 * ①Piece(駒クラス)
 * ②Board(盤面クラス)
 * ③Player(プレイヤークラス)
-* ④GameManeger(ゲーム全体管理クラス)
+* ④GameManager(ゲーム全体管理クラス)
 
 ## 主担当者名
 中村玲滉
@@ -24,7 +24,7 @@
 * List<Piece>pieces:手持ちの駒一覧
 * boolean isMyTurn:ターンの管理
 
-### GameManegerクラスの属性
+### GameManagerクラスの属性
 * Board board:盤面インスタンス
 * Player player1,player2;プレイヤー情報
 * String state:ゲーム状態(かいし・選択中・終了など)
@@ -48,7 +48,7 @@
 * void selectPiece(Piece p):コマの選択
 * void makeMove(Piece p, int x,int y):移動処理
 
-### GameManegerクラスのメソッド
+### GameManagerクラスのメソッド
 * void update():ゲームの状態更新処理
 * void checkWin():勝利条件
 * void nextTurn():ターンの切り替え処理
