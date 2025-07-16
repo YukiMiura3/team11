@@ -1,8 +1,8 @@
 class Player {
   boolean isMyTurn;
 
-  Player(boolean turn) {
-    isMyTurn = turn;
+  Player(boolean firstTurn) {
+    isMyTurn = firstTurn;
   }
 
   void toggleTurn() {

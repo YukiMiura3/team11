@@ -1,16 +1,16 @@
 GameManager game;
 
-void seup(){
-    size(720,720);
-    game = new GameManager();
-    game.setuo();
+void setup() {
+  size(720, 720);
+  game = new GameManager();
+  game.setup();
 }
 
-void draw(){
-    background(255);
-    game.draw();
+void draw() {
+  background(255);
+  game.draw();
 }
 
-void mousePressed(){
-    game.handleMouse(mouseX,mouseY);
+void mousePressed() {
+  game.handleMouse(mouseX, mouseY);
 }
