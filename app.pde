@@ -1,4 +1,4 @@
-GameManeger game;
+GameManager game;
 
 void seup(){
     size(720,720);
