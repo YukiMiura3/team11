@@ -11,15 +11,32 @@ class GameManager {
     p1 = new Player(true);   // 先手からスタート
     p2 = new Player(false);
     selected = null;
+    gameOver = false;
   }
 
   /* ---------- 描画 ---------- */
   void draw() {
     board.draw(selected);    // ★ Board.draw に選択駒を渡してハイライト
+    if (gameOver) {
+      // ゲーム終了時の表示
+      fill(0, 150); // 半透明の黒
+      rect(0, 0, width, height);
+      fill(255);
+      textSize(width * 0.1);
+      textAlign(CENTER, CENTER);
+      text("WIN!", width / 2, height / 2); // "WIN!"の表示
+      textSize(width * 0.03);
+      text("Click to restart", width / 2, height / 2 + width * 0.08); // 再起動メッセージ
+    }
   }
 
   /* ---------- マウス入力 ---------- */
   void handleMouse(int mx, int my) {
+    if (gameOver) {
+      // ゲーム終了時はクリックでリスタート
+      setup(); // ゲームをリセット
+      return;
+    }
 
     int x = int(mx / board.cellSize);
     int y = int(my / board.cellSize);
@@ -47,6 +64,12 @@ class GameManager {
     if (selected.canMoveTo(x, y, board)) {
       // 自駒マスには置けない（↑で除外済み）、敵駒なら捕獲可
       board.movePiece(selected, x, y);
+
+      // 駒を取った場合、それが幻王かチェック
+      if (capturedPiece != null && capturedPiece.name.equals("幻王")) {
+        gameOver = true; // 幻王が取られたらゲーム終了
+      }
+      
       selected = null;
 
       // ターン交代
