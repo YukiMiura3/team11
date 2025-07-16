@@ -63,6 +63,7 @@ class GameManager {
 
     // 2‑B. 移動先が合法かチェック
     if (selected.canMoveTo(x, y, board)) {
+      Piece capturedPiece = board.getPiece(x, y);
       // 自駒マスには置けない（↑で除外済み）、敵駒なら捕獲可
       board.movePiece(selected, x, y);
 
