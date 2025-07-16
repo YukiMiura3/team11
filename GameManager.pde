@@ -3,6 +3,7 @@ class GameManager {
   Board  board;
   Player p1, p2;     // p1 = 先手（上側）, p2 = 後手（下側）
   Piece  selected;   // 現在選択中の駒（なければ null）
+  boolean gameOver = false;
 
   /* ---------- 初期化 ---------- */
   void setup() {
@@ -69,7 +70,7 @@ class GameManager {
       if (capturedPiece != null && capturedPiece.name.equals("幻王")) {
         gameOver = true; // 幻王が取られたらゲーム終了
       }
-      
+
       selected = null;
 
       // ターン交代
