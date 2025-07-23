@@ -185,7 +185,7 @@ class Piece {
     return moves;
   }
   static PImage komaImage;
-static PImage ouImage;
+  static PImage ouImage;
 
 void drawAt(float x, float y, float dia) {
   pushMatrix();
