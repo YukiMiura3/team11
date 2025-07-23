@@ -1,12 +1,14 @@
+// Piece.pde
+
 class Piece {
   String  name;
   boolean isPromoted;
   boolean isRevealed;
-  boolean isMine;   // true = 先手
+  boolean isMine;    // true = 先手
   int x, y;
 
   Piece(String name, boolean isMine, int x, int y) {
-    this.name   = name;
+    this.name    = name;
     this.isMine = isMine;
     this.x      = x;
     this.y      = y;
@@ -17,16 +19,6 @@ class Piece {
   /* ===== 描画 ===== */
   void draw(float cellSize) {
     if (isRevealed || name.equals("幻王")) {
-      fill(isMine ? color(230, 120, 120) : color(120, 120, 230));
-      rect(x * cellSize, y * cellSize, cellSize, cellSize);
-
-      fill(0);
-      textSize(cellSize * 0.35);
-      textAlign(CENTER, CENTER);
-      text(name, x * cellSize + cellSize / 2, y * cellSize + cellSize / 2);
-    } else {
-      fill(160);
-      rect(x * cellSize, y * cellSize, cellSize, cellSize);
     }
   }
 
@@ -66,11 +58,10 @@ class Piece {
     int dy  = ty - y;
     int adx = abs(dx);
     int ady = abs(dy);
-    int fwd = isMine ? 1 : -1;           // 自分にとって前方の符号
-    int rdy = dy * (isMine ? 1 : -1);    // 自分目線での dy
+    int fwd = isMine ? 1 : -1;
+    int rdy = dy * (isMine ? 1 : -1);
 
     switch (name) {
-      /* 影狐／影神狐 */
       case "影狐":
         if (!isPromoted) {
           if ((adx == 0 && ady >= 1 && ady <= 2) ||
@@ -85,7 +76,6 @@ class Piece {
         }
         break;
 
-      /* 幽騎／幽天騎 */
       case "幽騎":
         if (!isPromoted) {
           if ((adx == 1 && rdy == 1) || (adx == 0 && rdy == 2)) return true;
@@ -95,7 +85,6 @@ class Piece {
         }
         break;
 
-      /* 残影／真影 */
       case "残影":
         if (!isPromoted) {
           if ((adx == 0 && ady == 1) || (ady == 0 && adx == 1)) return true;
@@ -107,7 +96,6 @@ class Piece {
         }
         break;
 
-      /* 夜叉／魔将夜叉 */
       case "夜叉":
         if (adx == 0 || ady == 0) {
           return pathClear(tx, ty, board);
@@ -115,7 +103,6 @@ class Piece {
         if (isPromoted && adx == 1 && ady == 1) return true;
         break;
 
-      /* 霞鳥／新鳥 */
       case "霞鳥":
         if (!isPromoted) {
           if (adx == 1 && ady == 1) return true;
@@ -126,30 +113,27 @@ class Piece {
         }
         break;
 
-      /* 白狼／幻狼 */
       case "白狼":
         if (adx == 0) {
-          if (rdy > 0) {                      // 前方無制限
+          if (rdy > 0) {
             return pathClear(tx, ty, board);
-          } else if (rdy < 0 && ady <= 2) {   // 後方 2
+          } else if (rdy < 0 && ady <= 2) {
             return pathClear(tx, ty, board);
           }
         } else if (isPromoted && adx == 1 && ady == 0) {
-          return true;                        // 横 1
+          return true;
         }
         break;
 
-      /* 鳴神／雷王 */
       case "鳴神":
         if (adx == ady) {
-          return pathClear(tx, ty, board);    // 斜め無制限
+          return pathClear(tx, ty, board);
         }
         if (isPromoted && ((adx == 1 && ady == 0) || (adx == 0 && ady == 1))) {
-          return true;                        // 縦横 1
+          return true;
         }
         break;
 
-      /* 幻王 */
       case "幻王":
         if (max(adx, ady) == 1) return true;
         break;
