@@ -1,16 +1,24 @@
+PFont jpFont;
 GameManager game;
 
+void settings() {
+  size(900, 700);
+}
+
 void setup() {
-  size(720, 720);
+  // 日本語フォントを作成して設定
+  jpFont = createFont("Meiryo", 32);
+  textFont(jpFont);
   game = new GameManager();
   game.setup();
 }
 
 void draw() {
-  background(255);
+  background(230, 204, 178);
   game.draw();
 }
 
 void mousePressed() {
-  game.handleMouse(mouseX, mouseY);
+  game.mousePressed();
 }
+

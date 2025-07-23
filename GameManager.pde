@@ -1,83 +1,114 @@
 class GameManager {
+  Board board;
+  Player S, G, current;
+  Piece selectedPiece;
+  boolean fromHand;
+  int handIdx;
+  ArrayList<PVector> possible;
+  boolean gameOver;
 
-  Board  board;
-  Player p1, p2;     // p1 = 先手（上側）, p2 = 後手（下側）
-  Piece  selected;   // 現在選択中の駒（なければ null）
-  boolean gameOver = false;
-
-  /* ---------- 初期化 ---------- */
   void setup() {
-    board = new Board(width);
-    board.initialize();
-    p1 = new Player(true);   // 先手からスタート
-    p2 = new Player(false);
-    selected = null;
+    board = new Board(225, 100, 50);
+    S = new Player(0);
+    G = new Player(1);
+    current = S;
+    selectedPiece = null; fromHand=false; handIdx=-1;
+    possible = new ArrayList<PVector>();
     gameOver = false;
+    initBoard();
   }
 
-  /* ---------- 描画 ---------- */
+  void initBoard() {
+    String[][] init = {
+      {"G-KY","G-KE","G-GI","G-KI","G-OU","G-KI","G-GI","G-KE","G-KY"},
+      {"","G-HI","","","","","","G-KA",""},
+      {"G-FU","G-FU","G-FU","G-FU","G-FU","G-FU","G-FU","G-FU","G-FU"},
+      {"","","","","","","","",""},
+      {"","","","","","","","",""},
+      {"","","","","","","","",""},
+      {"S-FU","S-FU","S-FU","S-FU","S-FU","S-FU","S-FU","S-FU","S-FU"},
+      {"","S-KA","","","","","","S-HI",""},
+      {"S-KY","S-KE","S-GI","S-KI","S-OU","S-KI","S-GI","S-KE","S-KY"}
+    };
+    for (int r=0;r<9;r++)for(int c=0;c<9;c++){
+      String v=init[r][c];
+      board.grid[r][c]=(v==null||v.trim().equals(""))?null:new Piece(v.trim(),r,c);
+    }
+  }
+
   void draw() {
-    board.draw(selected);    // ★ Board.draw に選択駒を渡してハイライト
+    board.draw();
+    if (selectedPiece!=null&&!gameOver) {
+      board.showMoves(selectedPiece);
+      board.highlightCell(selectedPiece.row, selectedPiece.col);
+    }
+    S.drawHand(50,600,40);
+    G.drawHand(50,20,40);
+    fill(0); textSize(24); textAlign(LEFT,TOP);
+    text((current==S?"先手(S)":"後手(G)")+" の番",50,530);
     if (gameOver) {
-      // ゲーム終了時の表示
-      fill(0, 150); // 半透明の黒
-      rect(0, 0, width, height);
-      fill(255);
-      textSize(width * 0.1);
-      textAlign(CENTER, CENTER);
-      text("WIN!", width / 2, height / 2); // "WIN!"の表示
-      textSize(width * 0.03);
-      text("Click to restart", width / 2, height / 2 + width * 0.08); // 再起動メッセージ
+      fill(0,0,0,180); rect(0,0,width,height);
+      fill(255); textAlign(CENTER,CENTER); textSize(36);
+      text((current == S ? "先手(S)" : "後手(G)") + "の勝ち！", width/2, height/2);
     }
   }
 
-  /* ---------- マウス入力 ---------- */
-  void handleMouse(int mx, int my) {
-    if (gameOver) {
-      // ゲーム終了時はクリックでリスタート
-      setup(); // ゲームをリセット
-      return;
-    }
-
-    int x = int(mx / board.cellSize);
-    int y = int(my / board.cellSize);
-
-    Piece clicked        = board.getPiece(x, y);
-    boolean player1Turn  = p1.isMyTurn;          // 今手番のプレイヤーを判定
-
-    /* 1. 駒未選択 → 自軍駒をクリックしたら選択 */
-    if (selected == null) {
-      if (clicked != null && clicked.isMine == player1Turn) {
-        selected = clicked;
+  void mousePressed() {
+    if (gameOver) return;
+    if (board.inBoard(mouseX,mouseY)) {
+      PVector rc=board.cellFromMouse(mouseX,mouseY);
+      int r=int(rc.x),c=int(rc.y);
+      Piece p=board.grid[r][c];
+      if (fromHand) {
+        for (PVector mv:possible) if (mv.x==r&&mv.y==c) {
+          String code=(current==S?"S-":"G-")+current.hand.get(handIdx).type;
+          board.grid[r][c]=new Piece(code,r,c);
+          current.hand.remove(handIdx);
+          endTurn(); return;
+        }
+        clearSelection(); return;
       }
-      return;                                  // ここで処理終了
-    }
-
-    /* 2. すでに駒を選択している状態 */
-
-    // 2‑A. 同じ陣営の別駒をクリックしたら選択し直し
-    if (clicked != null && clicked.isMine == player1Turn && clicked != selected) {
-      selected = clicked;
-      return;
-    }
-
-    // 2‑B. 移動先が合法かチェック
-    if (selected.canMoveTo(x, y, board)) {
-      Piece capturedPiece = board.getPiece(x, y);
-      // 自駒マスには置けない（↑で除外済み）、敵駒なら捕獲可
-      board.movePiece(selected, x, y);
-
-      // 駒を取った場合、それが幻王かチェック
-      if (capturedPiece != null && capturedPiece.name.equals("幻王")) {
-        gameOver = true; // 幻王が取られたらゲーム終了
+      if (selectedPiece==null) {
+        if (p!=null&&p.owner==current.id) {selectedPiece=p; possible=p.getMoves(board);} return;
       }
-
-      selected = null;
-
-      // ターン交代
-      p1.toggleTurn();
-      p2.toggleTurn();
+      for (PVector mv:possible) if (mv.x==r&&mv.y==c) {
+        Piece tgt=board.grid[r][c];
+        if (tgt!=null&&tgt.owner!=current.id) {
+          String base=tgt.demoteType(tgt.type);
+          if (!base.equals("OU")) current.hand.add(new Piece((current==S?"S-":"G-")+base,-1,-1));
+        }
+        board.grid[selectedPiece.row][selectedPiece.col]=null;
+        selectedPiece.row=r; selectedPiece.col=c;
+        board.grid[r][c]=selectedPiece;
+        selectedPiece.tryPromote(); endTurn(); return;
+      }
+      clearSelection(); return;
     }
-    // 2‑C. 不合法マスをクリックした場合は何もしない
+    if (mouseY>=600&&mouseY<640) {
+      int idx=(mouseX-50)/44;
+      if (idx>=0&&idx<S.hand.size()) {fromHand=true;handIdx=idx;selectedPiece=null;possible=getDrops(S);} return;
+    }
+    if (mouseY>=20&&mouseY<60) {
+      int idx=(mouseX-50)/44;
+      if (idx>=0&&idx<G.hand.size()) {fromHand=true;handIdx=idx;selectedPiece=null;possible=getDrops(G);} return;
+    }
+    if (mouseX>width-150&&mouseY>height-50) setup();
+  }
+
+  void endTurn() {
+    boolean sK=false,gK=false;
+    for (int r=0;r<9;r++)for(int c=0;c<9;c++){Piece p=board.grid[r][c];if(p!=null&&p.type.equals("OU")){if(p.owner==0)sK=true;else gK=true;}}
+    if (!sK||!gK) {gameOver=true;return;} current=(current==S?G:S);
+    clearSelection();
+  }
+
+  void clearSelection() {
+    selectedPiece=null; fromHand=false; handIdx=-1; possible.clear();
+  }
+
+  ArrayList<PVector> getDrops(Player pl) {
+    ArrayList<PVector> ds=new ArrayList<PVector>();
+    for(int r=0;r<9;r++)for(int c=0;c<9;c++) if(board.grid[r][c]==null) ds.add(new PVector(r,c));
+    return ds;
   }
 }
