@@ -1,4 +1,4 @@
-boolean showRules = false;  // ルール画面表示中フラグ
+boolean showRules = false;  
 
 // タイトル画面の描画
 void drawTitleScreen() {
@@ -6,7 +6,7 @@ void drawTitleScreen() {
   fill(255);
   textAlign(CENTER, CENTER);
   textSize(48);
-  text("ブラウザ将棋 (王を取ったら勝ち)", width/2, height/2 - 100);
+  text("影将棋", width/2, height/2 - 100);
 
   // 「ゲーム開始」ボタン
   float bw = 200, bh = 60;
