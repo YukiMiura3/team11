@@ -1,3 +1,5 @@
+// === app.pde ===
+
 PFont jpFont;
 GameManager game;
 boolean started;  
@@ -7,18 +9,19 @@ void settings() {
 }
 
 void setup() {
-  // 日本語フォントの設定
+  // 日本語フォント設定
   jpFont = createFont("Meiryo UI", 32, true);
   textFont(jpFont);
 
-  // ゲーム本体初期化
+  // ゲーム本体
   game = new GameManager();
-  started = false;  // タイトル画面からスタート
+  started = false;
 }
 
 void draw() {
   if (!started) {
-    drawTitleScreen();
+    // タイトル or ルール画面の描画
+    drawTitleScreenWrapper();
   } else {
     background(230, 204, 178);
     game.draw();
@@ -27,9 +30,9 @@ void draw() {
 
 void mousePressed() {
   if (!started) {
+    // タイトル/ルール画面のクリック処理
     titleMousePressed();
   } else {
     game.mousePressed();
   }
 }
-
