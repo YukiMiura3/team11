@@ -16,6 +16,10 @@ void setup() {
 
   game = new GameManager();
   started = false;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 12aeecf95e058783b38a43eecdf824c00bcea9a4
 }
 
 void draw() {
