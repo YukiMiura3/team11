@@ -17,9 +17,6 @@ void setup() {
   game = new GameManager();
   started = false;
 
-  Piece.komaImage = loadImage("無地駒.png");
-  Piece.ouImage = loadImage("白紙駒.png");
-
 }
 
 void draw() {
