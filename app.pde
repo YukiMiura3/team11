@@ -2,7 +2,7 @@ GameManager game;
 
 void seup(){
     size(720,720);
-    game = new GameManeger();
+    game = new GameManager();
     game.setuo();
 }
 
