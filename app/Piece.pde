@@ -184,20 +184,4 @@ class Piece {
 
     return moves;
   }
-  static PImage komaImage;
-  static PImage ouImage;
-
-void drawAt(float x, float y, float dia) {
-  pushMatrix();
-  translate(x, y);
-  if (owner == 1) rotate(PI);
-  
-  // 画像描画
-  PImage img = type.equals("OU") ? ouImage : komaImage;
-  imageMode(CENTER);
-  image(img, 0, 0, dia, dia);
-  
-  popMatrix();
-}
-
 }
