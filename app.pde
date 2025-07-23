@@ -1,4 +1,25 @@
+<<<<<<< HEAD
 PFont jpFont;
+=======
+<<<<<<< HEAD
+GameManager game;
+
+void seup(){
+    size(720,720);
+    game = new GameManager();
+    game.setuo();
+}
+
+void draw(){
+    background(255);
+    game.draw();
+}
+
+void mousePressed(){
+    game.handleMouse(mouseX,mouseY);
+}
+=======
+>>>>>>> 37958a1897f3961061beb1c6d470fbffbf19b448
 GameManager game;
 
 void settings() {
@@ -21,4 +42,8 @@ void draw() {
 void mousePressed() {
   game.mousePressed();
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 486241c407ddac296dd913b9de50148bf2321dd8
+>>>>>>> 37958a1897f3961061beb1c6d470fbffbf19b448
