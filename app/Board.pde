@@ -4,9 +4,7 @@ class Board {
   Piece[][] grid;
 
   Board(float x0, float y0, float cell) {
-    this.x0 = x0;
-    this.y0 = y0;
-    this.cell = cell;
+    this.x0 = x0; this.y0 = y0; this.cell = cell;
     grid = new Piece[N][N];
   }
 
@@ -18,7 +16,9 @@ class Board {
     for (int r = 0; r < N; r++) {
       for (int c = 0; c < N; c++) {
         Piece p = grid[r][c];
-        if (p != null) p.drawAt(x0 + c*cell + cell/2, y0 + r*cell + cell/2, cell * 0.8);
+        if (p != null) {
+          p.drawAt(x0 + c*cell + cell/2, y0 + r*cell + cell/2, cell * 0.8);
+        }
       }
     }
   }
@@ -40,7 +40,7 @@ class Board {
   }
 
   boolean inBoard(float mx, float my) {
-    return mx >= x0 && mx < x0 + N*cell && my >= y0 && my < y0 + N*cell;
+    return mx>=x0&&mx<x0+N*cell&&my>=y0&&my<y0+N*cell;
   }
 
   PVector cellFromMouse(float mx, float my) {

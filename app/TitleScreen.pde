@@ -1,6 +1,6 @@
-boolean showRules = false;  
+boolean showRules = false;
 
-// タイトル画面の描画
+// タイトル画面描画
 void drawTitleScreen() {
   background(50, 100, 150);
   fill(255);
@@ -8,7 +8,7 @@ void drawTitleScreen() {
   textSize(48);
   text("影将棋", width/2, height/2 - 100);
 
-  // 「ゲーム開始」ボタン
+  // ゲーム開始ボタン
   float bw = 200, bh = 60;
   float bx = width/2 - bw/2;
   float by = height/2 - 20;
@@ -18,7 +18,7 @@ void drawTitleScreen() {
   textSize(32);
   text("ゲーム開始", width/2, by + bh/2);
 
-  // 「ルール説明」ボタン
+  // ルール説明ボタン
   float by2 = by + bh + 20;
   fill(255, 200);
   rect(bx, by2, bw, bh, 10);
@@ -27,7 +27,7 @@ void drawTitleScreen() {
   text("ルール説明", width/2, by2 + bh/2);
 }
 
-// ルール画面の描画
+// ルール画面描画
 void drawRulesScreen() {
   background(240);
   fill(0);
@@ -46,7 +46,7 @@ void drawRulesScreen() {
   for (int i = 0; i < lines.length; i++) {
     text(lines[i], tx, ty + i * 30);
   }
-  // 「戻る」ボタン
+  // 戻るボタン
   float bw = 120, bh = 40;
   float bx = 20, by = height - bh - 20;
   fill(255, 200);
@@ -57,16 +57,13 @@ void drawRulesScreen() {
   text("戻る", bx + bw/2, by + bh/2);
 }
 
-// ラッパー：タイトル or ルール画面を切り替えて呼び出す
+// タイトル／ルール画面切り替え
 void drawTitleScreenWrapper() {
-  if (!showRules) {
-    drawTitleScreen();
-  } else {
-    drawRulesScreen();
-  }
+  if (!showRules) drawTitleScreen();
+  else            drawRulesScreen();
 }
 
-// タイトル画面上のボタン判定
+// ボタン領域判定
 boolean overStartButton(float mx, float my) {
   float bw = 200, bh = 60;
   float bx = width/2 - bw/2;
@@ -85,12 +82,12 @@ boolean overBackButton(float mx, float my) {
   return mx>=bx && mx<=bx+bw && my>=by && my<=by+bh;
 }
 
-// タイトル画面／ルール画面でのクリック処理
+// タイトル／ルール画面のクリック処理
 void titleMousePressed() {
   if (!showRules) {
     if (overStartButton(mouseX, mouseY)) {
-      started = true;   // app.pde 側の started を変更
-      game.setup();     // ゲーム初期化
+      started = true;
+      game.setup();
     }
     else if (overRulesButton(mouseX, mouseY)) {
       showRules = true;
