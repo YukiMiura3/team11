@@ -1,5 +1,3 @@
-// === app.pde ===
-
 PFont jpFont;
 GameManager game;
 boolean started;
