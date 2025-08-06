@@ -22,14 +22,14 @@ class GameManager {
 
   // 王以外を「元の駒があったマス」にランダム配置（コードのみをシャッフル）
   void initBoard() {
-    // 1) 盤面クリア
+    
     for (int r = 0; r < 9; r++) {
       for (int c = 0; c < 9; c++) {
         board.grid[r][c] = null;
       }
     }
 
-    // 2) テンプレート配置（王以外をリスト化）
+    
     String[][] init = {
       {"G-KY","G-KE","G-GI","G-KI","G-OU","G-KI","G-GI","G-KE","G-KY"},
       {"","G-HI","","","","","","G-KA",""},
@@ -42,10 +42,10 @@ class GameManager {
       {"S-KY","S-KE","S-GI","S-KI","S-OU","S-KI","S-GI","S-KE","S-KY"}
     };
 
-    // 3) 後手駒コードと位置リスト作成
+    
     ArrayList<String> Gcodes = new ArrayList<String>();
     ArrayList<PVector> Gpos   = new ArrayList<PVector>();
-    // 4) 先手駒コードと位置リスト作成
+    
     ArrayList<String> Scodes = new ArrayList<String>();
     ArrayList<PVector> Spos   = new ArrayList<PVector>();
 
@@ -66,7 +66,6 @@ class GameManager {
       }
     }
 
-    // 5) コードだけシャッフル（Fisher–Yates）
     for (int i = Gcodes.size() - 1; i > 0; i--) {
       int j = (int)random(i + 1);
       String tmp = Gcodes.get(i);
@@ -80,7 +79,6 @@ class GameManager {
       Scodes.set(j, tmp);
     }
 
-    // 6) シャッフル後のコードを、元の位置リスト順に配置
     for (int i = 0; i < Gcodes.size(); i++) {
       PVector p = Gpos.get(i);
       board.grid[(int)p.x][(int)p.y] = new Piece(Gcodes.get(i), (int)p.x, (int)p.y);
@@ -90,7 +88,6 @@ class GameManager {
       board.grid[(int)p.x][(int)p.y] = new Piece(Scodes.get(i), (int)p.x, (int)p.y);
     }
 
-    // 7) 王を固定配置
     board.grid[0][4] = new Piece("G-OU", 0, 4);
     board.grid[8][4] = new Piece("S-OU", 8, 4);
   }
